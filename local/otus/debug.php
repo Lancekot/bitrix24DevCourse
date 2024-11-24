@@ -15,6 +15,7 @@ function writeToLog($data, $title = ''){
 }
 
 
-writeToLog("Debug request received: ".print_r($_REQUEST, 'Testik'));
+writeToLog($_REQUEST, 'Testik1');
+
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/bitrix/footer.php';
