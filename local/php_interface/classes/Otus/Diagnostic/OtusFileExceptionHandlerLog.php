@@ -1,6 +1,6 @@
 <?php
 
-namespace Otus\Diagnostic;
+namespace Diagnostic;
 
 use Bitrix\Main\Diag\FileExeptionHandlerLog;
 use Bitrix\Main\Diag\ExceptionHandlerFormatter;

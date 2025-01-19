@@ -16,19 +16,19 @@ require $_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php';
 
 
 
-
-$dealarr = \Bitrix\DealTable::getList([
-    'filter' => [
-        'ID' => 9,
-    ],
-    'select' => [
-        'ID',
-    ]
-]);
-
-
-
-print_r($dealarr);
+//
+//$dealarr = \Bitrix\DealTable::getList([
+//    'filter' => [
+//        'ID' => 9,
+//    ],
+//    'select' => [
+//        'ID',
+//    ]
+//]);
+//
+//
+//
+//print_r($dealarr);
 
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/bitrix/footer.php';

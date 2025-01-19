@@ -3,18 +3,11 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true){
     die();
 }
 
-spl_autoload_register(function($class)
-{
-    if(!str_contains($class, 'Otus')){
-        return;
+spl_autoload_register(function ($className) {
+    $classPath = str_replace('\\', '/', $className);
+    $file = __DIR__."/$classPath.php";
+    //pr( $file);
+    if (file_exists($file)) {
+        include_once $file;
     }
-
-    $class = str_replace('\\', '/', $class);
-
-    $path = __DIR__. '/' .  $class .'.php';
-
-    if(is_file($path)){
-        require_once $path;
-    }
-
 });

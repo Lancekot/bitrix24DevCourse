@@ -5,9 +5,9 @@ define('DEBUG_FILE_NAME', $_SERVER['DOCUMENT_ROOT'].'/logs/' . date("Y-m-d") . '
 include_once __DIR__ . '/../Apps/Otus/autoload.php';
 
 
-//if(file_exists(__DIR__."/config.php". '/classes/autoload.php')){
-//    require_once __DIR__. '/classes/autoload.php';
-//}
+if(file_exists(__DIR__."/config.php". '/classes/autoload.php')){
+    require_once __DIR__. '/classes/autoload.php';
+}
 
 
 function pr($var, $type = false){
