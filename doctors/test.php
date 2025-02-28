@@ -6,20 +6,29 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle('Тест');
 
 
+//
+//$APPLICATION->IncludeComponent(
+//    "otus:table.views",
+//    'list',
+//    [
+//        "COMPONENT_TEMPLATE" => 'list',
+//        'SHOW_CHECKBOXES' => "Y",
+//        'NUM_PAGE'  => "1"
+//    ],
+//    false
+//);
+
+
 
 $APPLICATION->IncludeComponent(
-    "otus:table.views",
-    'list',
+    "otus:otus.grid",
+    '',
     [
-        "COMPONENT_TEMPLATE" => 'list',
         'SHOW_CHECKBOXES' => "Y",
         'NUM_PAGE'  => "1"
     ],
     false
 );
-
-
-
 
 
 
