@@ -4,10 +4,24 @@ define('DEBUG_FILE_NAME', $_SERVER['DOCUMENT_ROOT'].'/logs/' . date("Y-m-d") . '
 
 include_once __DIR__ . '/../Apps/Otus/autoload.php';
 
+//require_once __DIR__ . '/classes/Otus/BXHelper.php';
 
-if(file_exists(__DIR__."/config.php". '/classes/autoload.php')){
+if(file_exists(__DIR__.'/classes/autoload.php')){
     require_once __DIR__. '/classes/autoload.php';
 }
+
+//Константы
+require dirname(__FILE__) . '/constants.php';
+
+//Обработка событий
+require dirname(__FILE__) . '/event_handler.php';
+
+
+
+
+
+
+
 
 //Общий набор методов
 function pr($var, $type = false){
@@ -25,6 +39,11 @@ function addFileLog($text, $path){
     file_put_contents($path, $text . PHP_EOL, FILE_APPEND);
 }
 
+
+
+
+
+//Методы Rest API для работы с CRM
 function sendB24($url, array $fields = null)
 {
     if($fields){
@@ -53,10 +72,6 @@ function sendB24($url, array $fields = null)
     //$response = $postData;
     return json_decode($response);
 }
-
-
-
-
 
 //Проверка номера на дубль
 function validateAndFormatPhoneNumber($phoneNumber) {
@@ -223,13 +238,6 @@ function updateProductsByDeal($deal_id, $arPr, $method_4 = 'crm.deal.productrows
 
 }
 
-
-
-
-
-
-
-
 //Функция для формирования массива файлов для отправки
 function getFileArrayToSent($arrFiles, $site = 'https://ct70506.tw1.ru'){
 
@@ -257,7 +265,6 @@ function getFileArrayToSent($arrFiles, $site = 'https://ct70506.tw1.ru'){
     return $file_els;
 
 }
-
 
 //Метод для обновления сделки
 function updateDealByEco($deal_id, $fieldsArray, $typeUpdate, $hook = 'https://b24.apokdpo.ru/rest/5533/4bakunlcxgmsupt5/', $method = 'crm.deal.update'){
@@ -326,8 +333,16 @@ function updateDealByEco($deal_id, $fieldsArray, $typeUpdate, $hook = 'https://b
 
 
 
+
+
+
+
+
+
 //UF_CRM_1738088133829 - менеджер с портала ЭКО
 //UF_CRM_1605441630001 - документы
 //UF_CRM_1623956010 - пакет документов для методиста
+
+
 
 

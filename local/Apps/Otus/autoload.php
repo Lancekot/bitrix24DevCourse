@@ -8,3 +8,5 @@ spl_autoload_register(function ($className) {
         include_once $file;
     }
 });
+
+//UserTypes\FormatTelegramLink
