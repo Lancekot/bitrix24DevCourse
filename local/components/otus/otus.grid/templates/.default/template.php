@@ -23,7 +23,7 @@ $this->setFrameMode(true);
 
 <?
 //pr('Првиет');
- Здесь мы подключаем штатный компонент Grid и передем ему данные
+//Здесь мы подключаем штатный компонент Grid и передем ему данные
 $APPLICATION->IncludeComponent(
     "bitrix:main.ui.grid",
     "",

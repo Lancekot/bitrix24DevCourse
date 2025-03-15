@@ -334,7 +334,11 @@ function updateDealByEco($deal_id, $fieldsArray, $typeUpdate, $hook = 'https://b
 
 
 
+//Bitrix\Main\UI\Extension::load('tasks.color-my-task');
 
+//Bitrix\Main\UI\Extension::load('timeman.check-control-open-work-day');
+
+Bitrix\Main\UI\Extension::load('timeman.custom');
 
 
 
@@ -345,4 +349,60 @@ function updateDealByEco($deal_id, $fieldsArray, $typeUpdate, $hook = 'https://b
 
 
 
+// if(file_exists($_SERVER['DOCUMENT_ROOT']."/local/php_interface/include/markin.handler.call.php")){
+// 	require_once $_SERVER['DOCUMENT_ROOT']."/local/php_interface/include/markin.handler.call.php";
+// 	AddEventHandler('crm', 'OnAfterCrmCompanyAdd', 'checkCompanySegment');
+// }
+
+
+
+
+//AddEventHandler('crm', 'OnAfterCrmCompanyAdd', 'checkCompanySegment');
+
+
+//AddEventHandler('crm', 'OnBeforeCrmCompanyAdd', 'checkCompanySegment');
+//
+//function checkCompanySegment($company_arr)
+//{
+//
+//    if(!$company_arr['UF_CRM_1741764828824'] && $company_arr['ID'] == 0 && $company_arr['ASSIGNED_BY_ID'] == 1){
+//
+//        $company_arr['RESULT_MESSAGE']['MESSAGE'] = "Сегмент 1";
+//
+//        global $APPLICATION;
+//        $APPLICATION->ThrowException('Сегмент 1');
+//
+//        return false;
+//    }
+//
+//    return true;
+//
+//}
+
+
+
+
+//
+//function addNotifc($mes, $user_id = 1)
+//{
+//
+//
+//
+//
+////    if (IsModuleInstalled("im") && CModule::IncludeModule("im"))
+////    {
+////        $arMessageFields = array(
+////            "TO_USER_ID" => $user_id,
+////            "FROM_USER_ID" => 0,
+////            "NOTIFY_TYPE" => IM_NOTIFY_SYSTEM,
+////            "NOTIFY_MODULE" => "im",
+////            "NOTIFY_TAG" => "IM_CONFIG_NOTICE",
+////            "NOTIFY_MESSAGE" => $mes,
+////        );
+////        CIMNotify::Add($arMessageFields);
+////    }
+//
+//
+//
+//}
 

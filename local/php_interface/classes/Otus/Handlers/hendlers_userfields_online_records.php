@@ -13,9 +13,9 @@ if ($request->isPost()) {
 
     $path =$_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/classes/Otus/Handlers/log.txt';
 
-    addFileLog(json_encode($postData, JSON_UNESCAPED_UNICODE), $path);
-
-    addFileLog(json_encode($_SERVER['HTTP_REFERER'], JSON_UNESCAPED_UNICODE), $path);
+//    addFileLog(json_encode($postData, JSON_UNESCAPED_UNICODE), $path);
+//
+//    addFileLog(json_encode($_SERVER['HTTP_REFERER'], JSON_UNESCAPED_UNICODE), $path);
 
 
 //    // Обработка данных
