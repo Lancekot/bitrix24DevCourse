@@ -13,6 +13,12 @@ $eventManager = Main\EventManager::getInstance();
 
 
 
+// Урок 22
+//Добавляю обработчик события на изменение инфоблока
+$eventManager->addEventHandler('iblock', 'OnAfterIBlockElementUpdate', ['Otus\Events\IblockHendler', 'onElementAfterUpdate']);
+
+$eventManager->addEventHandler('crm', 'OnAfterCrmDealUpdate', ['Otus\Events\CrmHandler', 'onDealAfterUpdate']);
+
 
 //Тип свойства для инфоблоков (Расписание)
 $eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', ['Otus\UserType\CUserTypeTimesheet', 'GetUserTypeDescription']);
