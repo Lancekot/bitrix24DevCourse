@@ -17,7 +17,7 @@ $eventManager = Main\EventManager::getInstance();
 //Добавляю обработчик события на изменение инфоблока
 $eventManager->addEventHandler('iblock', 'OnAfterIBlockElementUpdate', ['Otus\Events\IblockHendler', 'onElementAfterUpdate']);
 
-$eventManager->addEventHandler('crm', 'OnAfterCrmDealUpdate', ['Otus\Events\CrmHandler', 'onDealAfterUpdate']);
+//$eventManager->addEventHandler('crm', 'OnAfterCrmDealUpdate', ['Otus\Events\CrmHandler', 'onDealAfterUpdate']);
 
 
 //Тип свойства для инфоблоков (Расписание)
