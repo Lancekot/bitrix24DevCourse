@@ -96,8 +96,8 @@ function validateAndFormatPhoneNumber($phoneNumber) {
 }
 
 //Функция для создания сделки с товарами
-function addNewDeal($phone, $contactName, $deal_name, $deal_id, $manager_name, $arPr){
-    $hook = 'https://b24.apokdpo.ru/rest/5533/4bakunlcxgmsupt5/';
+function addNewDeal($phone, $contactName, $deal_name, $deal_id, $manager_name, $arPr, $hook){
+
     $method_1 = 'crm.duplicate.findbycomm';
     $method_2 = 'crm.contact.add';
     $method_3 = 'crm.deal.add';
@@ -196,7 +196,7 @@ function addNewDeal($phone, $contactName, $deal_name, $deal_id, $manager_name, $
 
 
 //Функция для обновления товарных позиций
-function updateProductsByDeal($deal_id, $arPr, $method_4 = 'crm.deal.productrows.set', $hook = 'https://b24.apokdpo.ru/rest/5533/4bakunlcxgmsupt5/'){
+function updateProductsByDeal($deal_id, $arPr, $method_4 = 'crm.deal.productrows.set', $hook){
 
     $rows = [];
     $arProd = array_reverse($arPr);
@@ -267,7 +267,7 @@ function getFileArrayToSent($arrFiles, $site = 'https://ct70506.tw1.ru'){
 }
 
 //Метод для обновления сделки
-function updateDealByEco($deal_id, $fieldsArray, $typeUpdate, $hook = 'https://b24.apokdpo.ru/rest/5533/4bakunlcxgmsupt5/', $method = 'crm.deal.update'){
+function updateDealByEco($deal_id, $fieldsArray, $typeUpdate, $hook = '', $method = 'crm.deal.update'){
 
     if($typeUpdate == 're_work_complete'){
         //Только параметр стадии

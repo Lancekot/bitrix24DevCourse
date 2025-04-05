@@ -2,150 +2,91 @@
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
 
-use Bitrix\Iblock\Iblock;
 
 
-$arr = \Bitrix\Iblock\Elements\ElementbidTable::getList([
-    'select' => [
-        'ID',
-        'NAME',
-        'SDELKA',
-        'OTVETSTVENNYY',
-        'SUMMA'
-    ],
-    'filter' => [
-        'ID' => 119
-    ]
-])->fetchObject();
+$hoook = 'https://ct70506.tw1.ru/rest/1/pjackuwka2nnven3';
 
-pr($arr->getId());
-
-pr($arr->getName());
-
-pr($arr->getSdelka()->getValue());
+$method1 = 'otus.clientsdata.add';
+$method2 = 'otus.clientsdata.list';
+$method3 = 'otus.clientsdata.update';
+$method4 = 'otus.clientsdata.delete';
 
 
-pr($arr->getSumma()->getValue());
-
-pr($arr->get('OTVETSTVENNYY')->getValue());
-//
-//
-//
-
-
-$arr = \Bitrix\Iblock\Elements\ElementbidTable::getList([
-    'select' => [
-        'ID',
-    ],
-    'filter' => [
-        '=SDELKA.VALUE' => 14
-    ]
-])->fetchObject();
-
-$id = $arr->getId();
-
-pr($id);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//pr($arr->get('OTVETSTVENNYY')->setValue(1));
-
-
-//$factory = \Bitrix\Crm\Service\Container::getInstance()->getFactory(2);
-//$item = $factory->getItem(14);
-//$deal_arr = $item->getCompatibleData();
-//
-//pr($deal_arr['UF_CRM_1742544185']);
-//
-//
-$arr = [
-    'SUMMA' => '5000|RUB',
-    'OTVETSTVENNYY' => 3,
-    'SDELKA' => 14
+$fields = [
+ 'ID' => 3,
+'fields' => [
+    'UF_LASTNAME' => 'Тестиик'
+]
 ];
-\CIBlockElement::SetPropertyValues(119, 33, $arr);
+
+$url = $hoook ."/". $method3;
+
+
+$res = sendB24($url, $fields);
+
+pr($res);
 
 
 
 
+
+
+
+//$activityId = 16;
+//$activity = \CCrmActivity::GetByID($activityId);
 //
+//
+//pr($activity);
+//
+
+
+//\Bitrix\Crm\Timeline\CommentEntry::create(
+//    array(
+//        'TEXT' => 'текст который отобразится в Timeline',
+//        'SETTINGS' => array('HAS_FILES' => 'N'), //cодержит ли файл комментарий
+//        'AUTHOR_ID' => $USER->GetID(), //ID пользователя, от которого будет добавлен комментарий
+//        'BINDINGS' => array(array('ENTITY_TYPE_ID' => 2, 'ENTITY_ID' => 16)) // привязка к сущности CRM: ENTITY_TYPE_ID - тип сущности CRM (2 - Сделка), 'ENTITY_ID' - ID сделки в системе.
+//    ));
+
+
+
 //$params = [
-//    'PROPERTY_VALUES' => $arr,
+//    'TYPE_ID' => 25,
+//    'TYPE_CATEGORY_ID' => 6,
+//    'CREATED' => 1,
+//    'AUTHOR_ID' => 1,
+//    'ENTITY_TYPE_ID' => 2,
+//    'ENTITY_ID' => 17,
+//    'SETTINGS' => '',
+//    'SOURCE_ID' => 1,
+//    'BINDINGS' => array(array('ENTITY_TYPE_ID' => 2, 'ENTITY_ID' => 17))
+//
 //];
 //
-//$el_ogj = new CIBlockElement();
 //
-//$el_ogj->Update(119, $params);
-//
-
-
-
-
-
-
-
-
-//pr($arr->getSdelka()->getValue());
-
-
-
-//$arr2 = CIBlockElement::GetProperty(33, 119);
-//
-//while($prop = $arr2->fetch()){
-//    pr($prop);
-//}
-
-
-//$path = $_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/classes/Otus/Events/log.txt";
-//$arr = json_decode(file_get_contents($path), true);
+//$res = \Bitrix\Crm\Timeline\CallTrackerEntry::create($params);
 //
 //
+//pr($res);
+
+//$params = [
+//    'CREATED' => 1,
+//    'AUTHOR_ID' => 1,
+//    'ENTITY_TYPE_ID' => 2,
+//    'ENTITY_ID' => 17,
+//    'SETTINGS' => '',
+//    'BINDINGS' => array(array('ENTITY_TYPE_ID' => 2, 'ENTITY_ID' => 17))
 //
-////pr($arr);
-//
-//pr($arr['PROPERTY_VALUES'][108][174]['VALUE']); //Сумма
-//
-//pr($arr['PROPERTY_VALUES'][109][176]['VALUE']); //ID сделки
-//
-//pr($arr['PROPERTY_VALUES'][110]); //Ответственный
+//];
 //
 //
+//$res = \Bitrix\Crm\Timeline\CallTrackerEntry::create($params);
 //
-//UpdateDealByIblock($arr);
-
-
-
-
-
-
-
-
-
-
-
-//$factory = Bitrix\Crm\Service\Container::getInstance()->getFactory(2);
-//$item = $factory->getItem(14);
 //
-//pr($item->getCompatibleData());
+//pr($res);
 
 
-
-
-
-
+echo __FILE__;
 
 
 ?>
