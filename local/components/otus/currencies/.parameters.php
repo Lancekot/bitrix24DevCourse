@@ -1,10 +1,24 @@
 <?php
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
-if(!CModule::IncludeModule("iblock"))
-    return;
+use Bitrix\Main\Loader;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Currency\CurrencyTable;
 
-$arCompponentParameters = [
+Loader::includeModule('currency');
+
+$arrCurrency = CurrencyTable::getList([
+    'select' => ['CURRENCY', 'NUMCODE'],
+    'order' => ['SORT' => 'ASC']
+]);
+
+$currency = [];
+while($row = $arrCurrency->fetch())
+{
+    $currency[$row["NUMCODE"]] = $row['CURRENCY'];
+}
+
+$arComponentParameters = [
     "GROUPS" => [
         "CUR_PARAM" => [
             "NAME" => "Тестовая группа",
@@ -12,17 +26,12 @@ $arCompponentParameters = [
         ]
     ],
     "PARAMETERS" => [
-        "STING"  => [
+        "CURRENCY"  => [
             "PARENT" => "CUR_PARAM",
-            "NAME" => "Тестовая строка",
-            "TYPE" => "STRING",
-            "DEFAULT" => "10000",
-        ],
-        "NUMP"  => [
-            "PARENT" => "CUR_PARAM",
-            "NAME" => "Тестовая цифра",
-            "TYPE" => "STRING",
-            "DEFAULT" => "100000",
+            "NAME" => "Выбрать валюту",
+            "TYPE" => "LIST",
+            "VALUES" => $currency,
+            "REFRESH" => "Y"
         ],
     ]
 ];

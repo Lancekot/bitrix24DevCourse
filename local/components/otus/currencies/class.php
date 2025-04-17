@@ -36,10 +36,37 @@ class OtusCurrenciesComponent extends CBitrixComponent
         return true;
     }
 
+//    private function getColumn()
+//    {
+//        $fieldMap = Clients::getMap();
+//        $column = [];
+//        foreach($fieldMap as $fieldName => $fieldValue){
+//            $columns[] = [
+//                'id' => $fieldValue->getName(),
+//                'name' => $fieldValue->getTitle(),
+//            ];
+//        }
+//        return $column;
+//    }
+
+
+
 
     private function getCurrentRate()
     {
-        return $this->arParams['SELECT_ES'];
+//        $currence = 'USD';
+
+        $currence =  $this->arParams['CURRENCY'];
+
+
+        //Вот здесь описываю логику получения таблицы
+        $result = Bitrix\Currency\CurrencyTable::getList([
+            'select' => ['AMOUNT' , 'CURRENCY'],
+            'filter' => ['NUMCODE' => $currence],
+            'order' => ['SORT' => 'ASC']
+        ])->fetch();
+
+        return $result;
 
     }
 

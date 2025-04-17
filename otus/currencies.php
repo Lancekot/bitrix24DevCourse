@@ -35,6 +35,7 @@ $APPLICATION->IncludeComponent(
     '.default',
     [
             "COMPONENT_TEMPLATE" => '.default',
+            "TEXTTT222" => 'skfdjlskjflsjkfklsdf'
     ],
     false
 );

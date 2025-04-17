@@ -17,12 +17,6 @@ require dirname(__FILE__) . '/constants.php';
 require dirname(__FILE__) . '/event_handler.php';
 
 
-
-
-
-
-
-
 //Общий набор методов
 function pr($var, $type = false){
     echo '<pre style="font-size:10px; border:1px solid #000; text-align: left">';
@@ -38,9 +32,6 @@ function addFileLog($text, $path){
 
     file_put_contents($path, $text . PHP_EOL, FILE_APPEND);
 }
-
-
-
 
 
 //Методы Rest API для работы с CRM
@@ -332,6 +323,27 @@ function updateDealByEco($deal_id, $fieldsArray, $typeUpdate, $hook = '', $metho
 }
 
 
+//Агент
+function updateProductRemainAgent()
+{
+    \OTUSPROJECT\Handlers\ManagerRemainProducts::updateProductRemain();
+    return "updateProductRemainAgent();";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //Bitrix\Main\UI\Extension::load('tasks.color-my-task');
@@ -339,8 +351,6 @@ function updateDealByEco($deal_id, $fieldsArray, $typeUpdate, $hook = '', $metho
 //Bitrix\Main\UI\Extension::load('timeman.check-control-open-work-day');
 
 Bitrix\Main\UI\Extension::load('timeman.custom');
-
-
 
 
 //UF_CRM_1738088133829 - менеджер с портала ЭКО

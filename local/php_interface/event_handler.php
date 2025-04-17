@@ -73,3 +73,25 @@ $eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', ['Otus\Use
 //Добавляю свой rest-метод, урок 28
 $eventManager->addEventHandlerCompatible('rest', 'OnRestServiceBuildDescription', ['Otus\Rest\Events', 'OnRestServiceBuildDescriptionHandler']);
 //$eventManager->addEventHandler('rest', 'OnRestServiceBuildDescription', ['Otus\Rest\Events', 'OnRestServiceBuildDescriptionHandler']);
+
+
+//отслеживание события добавления товарной позиции в сделке
+$eventManager->addEventHandler("crm", "OnAfterCrmDealProductRowsSave", function($dealId, $productRows) use (&$eventLock){
+    if($eventLock){
+        return;
+    }
+    $eventLock = true;
+
+    OTUSPROJECT\Handlers\ManagerRemainProducts::checkRemainByDeal($dealId);
+
+    $eventLock = false;
+});
+
+
+//Отслеживаю созадние сделки, на наличие рабочих сделок по контакту
+$eventManager->addEventHandler('crm', 'OnBeforeCrmDealAdd', ['OTUSPROJECT\Handlers\ManagerCrmEntyty', 'checkActiveDeal']);
+
+
+
+//Тип свойства для инфоблоков (Кнопка просмотр истории), для проекта
+$eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', ['OTUSPROJECT\UserType\CUserTypeButtonOrderHistory', 'GetUserTypeDescription']);

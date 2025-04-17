@@ -18,7 +18,6 @@ class CUserTypeOnlineRecord
             'DESCRIPTION' => 'Онлайн-запись 1111',
 
             'GetPropertyFieldHtml' => [self::class, 'GetPropertyFieldHtml'], //метод отображения свойства в Админке
-
             'GetPublicViewHTML' => [self::class, 'GetPublicViewHTML'], // метод отображения значения свойства в Публичной части
             'GetPublicEditHTML' => [self::class, 'GetPropertyFieldHtml'], //метод отображения значения в форме редактирования
         ];
@@ -36,86 +35,59 @@ class CUserTypeOnlineRecord
 
     }
 
+
+    public static function getDataValues($id) {
+
+        \Bitrix\Main\Loader::includeModule('iblock');
+
+        $data = \Bitrix\Iblock\Elements\ElementdoctorsTable::getList([
+            'filter' => ['ID' => $id],
+            'select' => ['PROC_IDS_MULTI.ELEMENT'],
+        ])->fetchObject();
+
+        $valuesElement = [];
+        foreach ($data->getProcIdsMulti()->getAll() as $el){
+            $valuesElement[$el->getElement()->getId()] = $el->getElement()->getName();
+        }
+
+        return $valuesElement;
+    }
+
+
     public static function GetPublicViewHTML($arProperty, $arValue, $strHTMLControlName)
     {
 
         $strResult = '';
+        \CJSCore::Init(['popup']);
+        $inpid = 'rec_id_' . rand(0, 99);
 
+        $valuesElement = self::getDataValues($arProperty['ELEMENT_ID']);
+        if (empty($valuesElement))
+        {
+            return 'У врача нет процедур';
+        }
 
+        $count = 0;
 
+        foreach($valuesElement as $id => $el){
 
-        //ELEMENT_ID в $arValue и $arProperty (и вообще одинаковые)
-        //IBLOCK_ID в $arValue и $arProperty (и вообще одинаковые)
-
-
-
-
-        //Если ссылка на процедуры, который оказывает врач
-
-
-        //1. Получаем список процедур (готово)
-        //2. Добавляем процедуры в ссылку (готово)
-        //3. Пишем JS и вещаем на ссылку событие по клику
-        //4. Открывается pop-ap с выбором календаря и ФИО
-        //5. Отправляем заполненные данные в обработчик по AJAX
-        //6. обработчик проверяет, если все ок, то добавляет новый элемент в список
-        //7. возвращает ответ, ID созданного Элемента в форму
-
-
-        //Какие вижу вопросы/моменты
-        //1. Можно ли вывести js-скрипты и css в отдельные файлы?
-        //2. Можно ли подключать готовые компоненты?
-
-
-        //1. Получаем список процедур
-
-        $iblockVirClass =  \Bitrix\Iblock\Iblock::wakeUp($arValue['IBLOCK_ID'])->getEntityDataClass();
-
-        $res = $iblockVirClass::getByPrimary($arValue['ELEMENT_ID'], [
-            'select' => [
-                'PROC_IDS_MULTI.ELEMENT'
-            ],
-        ])->fetchObject();
-
-        foreach($res->getProcIdsMulti()->getAll() as $prItem){
-
-            $inpid = 'btn_online_record' . rand(0, 99);
-            $name_pr = $prItem->getElement()->getName();
-
-            $strResult .= '<a href="#"  onclick="onAddOnlineRecord('. $inpid . ','. $prItem->getElement()->getId() .')"   id="' . $inpid. '">' . $name_pr .'</a><br>';
-
-            //$strResult .= '<a href="#"  onclick="LazyBanner()"   id="' . $inpid. '">' . $prItem->getElement()->getName() .'</a><br>';
-
-//            if($inpid && $name_pr){
-//                $strResult .= '<a href="#"  onclick="kkkkkk('.$inpid.')" id="' . $inpid. '">' . $name_pr .'</a><br>';
-//            }else{
-//
-//                $strResult .= '<a href="#"  onclick="kkkkkk("что то по")" id="' . $inpid. '">' . $name_pr .'</a><br>';
-//            }
-
+            $strResult .= '<a data-pr-id="'.$id.'"  style="cursor:pointer;" id="elem_'. $count . '_' . $inpid. '">' . $el .'</a><br>';
+            $count++;
 
         }
 
 
-
-
-
-
-
-
-
-        CJSCore::Init(['popup']);
-
         $strResult .= '
         <script type="text/javascript">
 
+            BX.ready(function () {
+                for(let i = 0; i < '.$count.'; i++)
+                    {
+                        BX.bind(BX("elem_"+i+"_'.$inpid.'"), "click", onAddOnlineRecord);  
+                    }  
+            });
 
-//           function kkkkkk(inpid){
-//               
-//              let ff =  BX(inpid);
-//               console.log(ff);
-//           }
-//        
+            
         function LazyBanner(name, date, procedure) {
             console.log("запуск");
             BX.ajax({
@@ -136,11 +108,7 @@ class CUserTypeOnlineRecord
                console.log("Завершено");
         }
 
-
-
-
-            
-        function onAddOnlineRecord(inpid, pr_id){
+        function onAddOnlineRecord(e){
             
             let content = BX.create("div", {
                 children: [
@@ -165,8 +133,7 @@ class CUserTypeOnlineRecord
                 ]
               });
             
-            
-            var popup = BX.PopupWindowManager.create("popup-message", inpid, {
+            var popup = BX.PopupWindowManager.create("popup-message", e.targent, {
                 content: content,
                 //contentColor: "red",
                 //borderRadius: "40px",
@@ -200,12 +167,17 @@ class CUserTypeOnlineRecord
                         //className: "Добавить запись", //доп. классы
                         events: {
                             click: function(){
-                                
+                               
                                 let nameValue = BX("input_name_online_record").value;
                                  let dateValue = BX("input_date_online_record").value;
+                                  let pr_id = e.target.getAttribute("data-pr-id");
+                                  
+                                  console.log("Что пришло сюда");
+                                  console.log(pr_id);
                                 
                                 LazyBanner(nameValue, dateValue, pr_id);
-                                popup.close();
+                                
+                                 popup.close();
                             }
                         }
                    }), //дольше можно еще одну кнопку добавить
@@ -223,7 +195,7 @@ class CUserTypeOnlineRecord
             popup.show();
         }
         
-            
+            //rjytw
             
             
         
@@ -233,43 +205,9 @@ class CUserTypeOnlineRecord
 
 
 
-
-
-
-
-
-        //Если кнопка
-        //$strResult = '<button id="onl-btn-9129961501" type="bitton">Записать</button>';
-
-
-
-        //Вешаю обрабочик события и pop-up
-
-
-
-
-
-
         return $strResult;
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
