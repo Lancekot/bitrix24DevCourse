@@ -3,6 +3,7 @@ namespace OTUSPROJECT\Handlers;
 
 class ManagerCrmEntyty
 {
+    //Проверка на дубль по автомобилю и клиенту
     public static function checkActiveDeal(&$arr)
     {
 
@@ -10,9 +11,10 @@ class ManagerCrmEntyty
         $deals = \Bitrix\Crm\DealTable::getList([
             'filter' => [
                 '=CONTACT_ID' => $arr['CONTACT_ID'],
+                'UF_CRM_1744910392' => $arr['UF_CRM_1744910392'],
                 'CLOSED' => 'N'
             ],
-            'select' => ['ID', 'STAGE_ID']
+            'select' => ['ID']
         ])->fetchAll();
 
 
@@ -27,6 +29,7 @@ class ManagerCrmEntyty
     }
 
 
+    //Получения списка сделок по автомобилю и контакту
     public static function checkAllDealByContact($contactId)
     {
         if(\Bitrix\Main\Loader::includeModule('crm'))

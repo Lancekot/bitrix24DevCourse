@@ -19,7 +19,7 @@ class CUserTypeOnlineRecord
 
             'GetPropertyFieldHtml' => [self::class, 'GetPropertyFieldHtml'], //метод отображения свойства в Админке
             'GetPublicViewHTML' => [self::class, 'GetPublicViewHTML'], // метод отображения значения свойства в Публичной части
-            'GetPublicEditHTML' => [self::class, 'GetPropertyFieldHtml'], //метод отображения значения в форме редактирования
+            'GetPublicEditHTML' => [self::class, 'GetPublicEditHTML'], //метод отображения значения в форме редактирования
         ];
 
 
@@ -53,7 +53,6 @@ class CUserTypeOnlineRecord
         return $valuesElement;
     }
 
-
     public static function GetPublicViewHTML($arProperty, $arValue, $strHTMLControlName)
     {
 
@@ -70,28 +69,30 @@ class CUserTypeOnlineRecord
         $count = 0;
 
         foreach($valuesElement as $id => $el){
-
-            $strResult .= '<a data-pr-id="'.$id.'"  style="cursor:pointer;" id="elem_'. $count . '_' . $inpid. '">' . $el .'</a><br>';
+            $strResult .= '<a data-pr-id="'. $id. '" class="book_procedure" style="cursor:pointer;" id="elem_'. $inpid . '_' . $id. '">' . $el .'</a><br>';
             $count++;
-
         }
 
 
         $strResult .= '
         <script type="text/javascript">
 
-            BX.ready(function () {
-                for(let i = 0; i < '.$count.'; i++)
-                    {
-                        BX.bind(BX("elem_"+i+"_'.$inpid.'"), "click", onAddOnlineRecord);  
-                    }  
+        BX.ready(function () {
+            let bookProcedure = document.querySelectorAll(".book_procedure");
+            bookProcedure.forEach(function(procedure) {
+                procedure.addEventListener("click", onAddOnlineRecord);
             });
+        });    
 
-            
         function LazyBanner(name, date, procedure) {
-            console.log("запуск");
+            
+            console.log("LazyBanner");
+            console.log(name);
+            console.log(date);
+            console.log(procedure);
+            
             BX.ajax({
-                url: "https://ct70506.tw1.ru/local/php_interface/classes/Otus/Handlers/hendlers_userfields_online_records.php", // файл на который идет запрос
+                url: "/local/php_interface/classes/Otus/Handlers/hendlers_userfields_online_records.php", // файл на который идет запрос
                 method: "POST", // метод запроса GET/POST
                 // параметры передаваемый запросом
                 data: {
@@ -105,11 +106,15 @@ class CUserTypeOnlineRecord
                 }
             });
             
-               console.log("Завершено");
-        }
+        }       
 
         function onAddOnlineRecord(e){
-            
+            e.preventDefault();
+            e.stopPropagation();  
+
+            let pr_id = e.target.getAttribute("data-pr-id");
+            console.log(pr_id);
+
             let content = BX.create("div", {
                 children: [
                     BX.create("input", {
@@ -117,7 +122,7 @@ class CUserTypeOnlineRecord
                             type: "text",
                             name: "name_online_record",
                             placeholder: "Ваше ФИО",
-                            id: "input_name_online_record",
+                            id: "input_name_online_record_" + pr_id,
                         }
                     }),
                     BX.create("br"),
@@ -126,76 +131,64 @@ class CUserTypeOnlineRecord
                         attrs: {
                             type: "datetime-local",
                             name: "date_online_record",
-                            id: "input_date_online_record",
+                            id: "input_date_online_record_" + pr_id,
                         }
                     }),
                     BX.create("br")
                 ]
-              });
-            
-            var popup = BX.PopupWindowManager.create("popup-message", e.targent, {
-                content: content,
-                //contentColor: "red",
-                //borderRadius: "40px",
-//                position: "top",
-                width: 400,
-                height: 400,
-                zIndex: 100,
-                closeIcon: {
-                    //Объект со стилями для иконки закрытия, при null -иконки не будет
-                    //opacity: 1
-                },
-                titleBar: "Записаться на прием",
-                closeByEsc: true, // закрывать при нажатии на Esc
-                darkMode: false, //окно будет светлым или темным
-                autoHide: false, //закрытие при клике вне окна
-                draggable: true, //можно двигать или нет
-                resizable: true, //можно изменят размер
-                min_height: 100, //минимальная высота окна
-                min_width: 100, //минимальная ширина окна
-                lightShadow: false, // использовать светлую тень у окна
-                angle: false, // появится уголок
-                overlay: {
-                    // объект со стилями фона
-                    backgroundColor: "black",
-                    opacity: 400
-                },
-                buttons: [
-                    new BX.PopupWindowButton({
-                        text: "Добавить запись", //текст кнопки
-                        id: "add_new_online_record", //идентификатор
-                        //className: "Добавить запись", //доп. классы
-                        events: {
-                            click: function(){
-                               
-                                let nameValue = BX("input_name_online_record").value;
-                                 let dateValue = BX("input_date_online_record").value;
-                                  let pr_id = e.target.getAttribute("data-pr-id");
-                                  
-                                  console.log("Что пришло сюда");
-                                  console.log(pr_id);
-                                
-                                LazyBanner(nameValue, dateValue, pr_id);
-                                
-                                 popup.close();
+              });         
+           
+            BX.PopupWindowManager.create("bookingPopup_" + pr_id, pr_id, {
+                    content: content,
+                    titleBar: {content: BX.create("span", {html: "Запись на процедуру"})},
+                    closeIcon: {right: "20px", top: "10px"},
+                    width: 400,
+                    height: 400,
+                    zIndex: 100,
+                    closeIcon: {
+                        //Объект со стилями для иконки закрытия, при null -иконки не будет
+                        //opacity: 1
+                    },
+                    titleBar: "Записаться на прием",
+                    closeByEsc: true, // закрывать при нажатии на Esc
+                    darkMode: false, //окно будет светлым или темным
+                    autoHide: false, //закрытие при клике вне окна
+                    draggable: true, //можно двигать или нет
+                    resizable: true, //можно изменят размер
+                    min_height: 100, //минимальная высота окна
+                    min_width: 100, //минимальная ширина окна
+                    lightShadow: false, // использовать светлую тень у окна
+                    angle: false, // появится уголок
+                    overlay: {
+                        // объект со стилями фона
+                        backgroundColor: "black",
+                        opacity: 400
+                    },
+                    buttons: [
+                        new BX.PopupWindowButton({
+                            text: "Добавить запись", //текст кнопки
+                            id: "add_new_online_record_"+pr_id, //идентификатор
+                            events: {
+                                click: function(){
+                                   
+                                    let nameValue = BX("input_name_online_record_" + pr_id).value;
+                                    let dateValue = BX("input_date_online_record_" + pr_id).value;
+                                     
+                                    // console.log("Что пришло сюда");
+                                    // console.log(pr_id);   
+
+                                    LazyBanner(nameValue, dateValue, pr_id);                                 
+                                    
+                                    BX.PopupWindowManager.getCurrentPopup().close();
+                                }
                             }
-                        }
-                   }), //дольше можно еще одну кнопку добавить
-                ],
-                events: {
-                    onPopupShow: function() {
-                        //Событие при показа окна
-                    },
-                     onPopupClose: function() {
-                        //Событие при закрытие окна
-                    },
-                }
-            });
-            
-            popup.show();
+                        })
+                    ]
+            }).show();
+
         }
         
-            //rjytw
+            
             
             
         
@@ -208,6 +201,7 @@ class CUserTypeOnlineRecord
         return $strResult;
 
     }
+
 
 
 
