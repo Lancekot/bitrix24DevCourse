@@ -3,11 +3,14 @@ namespace OTUSPROJECT\Handlers;
 
 use OTUSPROJECT\Handlers\ManagerSuppliers;
 
-
 class ManagerRemainProducts
 {
 
     //Получаю массив товарных позиций, по которым нужно сформировать "Заявку на закуп" по сделке (Работает)
+    /**
+     * @param $dealId - ID сделки
+     * @return void
+     */
     public static function checkRemainByDeal($dealId)
     {
 
@@ -53,7 +56,50 @@ class ManagerRemainProducts
         }
     }
 
+
+    //Формирую заявку на закуп, при 0 остатке в каталоге
+    /**
+     * @param $productId - ID товара из каталога
+     * @return void
+     */
+    public static function checkRemainByCatalog($productId)
+    {
+
+        $supplier = self::getSupplierId($productId);
+
+        $productForSupOrder = [[
+            'PRODUCT_ID' => $productId,
+            'QUANTITY' => 5,
+            'SUPPLIER' => $supplier,
+        ]];
+
+        //Проверяем заполнен ли массив, если да, то создаем смарт процесс заявки на закуп
+        if(!empty($productForSupOrder)){
+
+            $entityTypeId = 1036;
+            $fields = [
+                //'TITLE' => 'Название элемента',
+                'ASSIGNED_BY_ID' => 1,
+                'UF_CRM_3_1744881973' => 1
+            ];
+
+            $elementId = ManagerSuppliers::createSmartProcessElement($entityTypeId, $fields);
+
+            //Добавляем товарные позиции из массива
+            if($elementId){
+
+                ManagerSuppliers::addProductRowsToSmartProcess($entityTypeId, $elementId, $productForSupOrder, 'T40c');
+
+            }
+        }
+    }
+
     //Получаю массив товарных позиций, по которым нужно сформировать "Заказ поставщику" по "Заявке на закуп"
+    /**
+     * @param $smartId - ID элемента смарт процесса
+     * @param $smartTypeId - ID смарт-процесса
+     * @return void
+     */
     public static function checkRemainBySmartGroupSuplier($smartId, $smartTypeId)
     {
 
@@ -91,6 +137,11 @@ class ManagerRemainProducts
     }
 
     //Добавляю остаток в каталог
+    /**
+     * @param $smartId
+     * @param $smartTypeId
+     * @return void
+     */
     public static function increaseProductQuantityBySmart($smartId, $smartTypeId)
     {
         $arPrRaw = self::getProductRowsByEntytiId($smartId, $smartTypeId);
@@ -103,6 +154,10 @@ class ManagerRemainProducts
 
 
     //Обновляю товарный запас каталога
+    /**
+     * @return void
+     * @throws \Exception
+     */
     public static function updateProductRemain()
     {
         //Получаю все товары
@@ -116,8 +171,12 @@ class ManagerRemainProducts
 
     }
 
-
     //Получаем список товарных позиций привязанных к сущности
+    /**
+     * @param $entyty_id - ID сущности
+     * @param $entyty_type - Тип сущности
+     * @return array
+     */
     public static function getProductRowsByEntytiId($entyty_id, $entyty_type ='D')
     {
         $productRows = [];
@@ -141,6 +200,10 @@ class ManagerRemainProducts
     }
 
     //Получаю ID поставщика товара
+    /**
+     * @param $pr_id - ID товара
+     * @return mixed
+     */
     public static function getSupplierId($pr_id)
     {
         $res = \Bitrix\Iblock\Elements\ElementcatalogcrmTable::getList([
@@ -163,6 +226,10 @@ class ManagerRemainProducts
     }
 
     //Получаем остатков товаров по товарным позициям привязанных к сделкам
+    /**
+     * @param $arPrRaw - массив содержащий товарные позиции по сделке
+     * @return array
+     */
     public static function getProdectQuantityBrProductRawDeal($arPrRaw)
     {
         $productData = \Bitrix\Catalog\ProductTable::getList([
@@ -184,6 +251,11 @@ class ManagerRemainProducts
     }
 
     //Формируем массив товаров с недостаточным кол-вом и кол-во для дозаказа
+    /**
+     * @param $arrPrQuantyty - массив содержащий товары по товарным позициям с остатками
+     * @param $arPrRaw - массив содержащий товарные позиции по сделке
+     * @return array
+     */
     public static function getProductQuantytyForSupplierOrder($arrPrQuantyty, $arPrRaw){
         $arr = [];
 
@@ -203,6 +275,11 @@ class ManagerRemainProducts
     }
 
     //Группирую отсутсвующие позиции для заказа по поставщикам
+    /**
+     * @param $productForSupOrder - массив содержащий товарные позиции по сделке и ID поставщика
+     * @param $arPrRaw - массив содержащий товарные позиции по сделке
+     * @return array
+     */
     public static function getArrPrBySupplier($productForSupOrder, $arPrRaw)
     {
 
@@ -220,6 +297,13 @@ class ManagerRemainProducts
     }
 
     //Увеличиваю остаток у товарной позиции
+
+    /**
+     * @param $productId - ID товара из каталога
+     * @param $quantityToAdd - кол-во которое необходимо добавить
+     * @return void
+     * @throws \Bitrix\Main\LoaderException
+     */
     public static function increaseProductQuantity($productId, $quantityToAdd)
     {
         if(\Bitrix\Main\Loader::includeModule('catalog'))
@@ -247,6 +331,12 @@ class ManagerRemainProducts
     }
 
     //Уменьшаю остаток у товарной позиции
+    /**
+     * @param $productId - ID товара из каталога
+     * * @param $quantityToAdd - кол-во которое необходимо убрать
+     * @return void
+     * @throws \Bitrix\Main\LoaderException
+     */
     public static function reduceProductQuantity($productId, $quantityToAdd)
     {
         if (\Bitrix\Main\Loader::includeModule('catalog'))
@@ -276,8 +366,11 @@ class ManagerRemainProducts
         }
     }
 
-
     //Получаю все ID каталога торговых предложений
+
+    /**
+     * @return array - получаем массив торговых предложений
+     */
     public static function getOfferCatalog()
     {
         $arrPrOffers = \Bitrix\Iblock\Elements\ElementofferproductTable::getList([
@@ -296,6 +389,11 @@ class ManagerRemainProducts
     }
 
     //Делаю запрос на сервис для получения остатков
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public static function getRandomInteger()
     {
         $httpClient = new \Bitrix\Main\Web\HttpClient();
@@ -313,5 +411,29 @@ class ManagerRemainProducts
             throw new \Exception('Ошибка при выполнении запроса: ' . implode(', ', $error));
         }
     }
+
+
+    //Метод для обработки события изменения остатков
+    /**
+     * @param \Bitrix\Main\ORM\Event $event
+     * @return void
+     */
+    public static function hendlerCheckRemainByCatalog(\Bitrix\Main\ORM\Event $event)
+    {
+        $id = $event->getParameter("id");
+        $parameters = $event->getParameters();
+        if(!array_key_exists('TYPE', $parameters['fields'] ) && $parameters['fields']['QUANTITY'] == 0)
+        {
+
+            //Запускаем метод создания заявки на закуп
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/classes/Otus/Handlers/log.txt';
+            addFileLog("Что пришло в событие", $path);
+            addFileLog("ID: " . $id['ID'], $path);
+            addFileLog(json_encode($parameters, JSON_UNESCAPED_UNICODE), $path);
+            self::checkRemainByCatalog($id['ID']);
+
+        }
+    }
+
 
 }

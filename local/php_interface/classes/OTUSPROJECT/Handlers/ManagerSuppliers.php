@@ -8,6 +8,12 @@ class ManagerSuppliers
 {
 
     //Создаю элемент смарт процесса
+    /**
+     * @param $entityTypeId - ID смарт процесса
+     * @param $fields - Поля элемента смарт-процесса
+     * @return void
+     * @throws \Bitrix\Main\LoaderException
+     */
     public static function createSmartProcessElement($entityTypeId, $fields)
     {
         if(\Bitrix\Main\Loader::includeModule('crm'))
@@ -42,6 +48,11 @@ class ManagerSuppliers
     }
 
     //Получаю данные полей элемента смарт проецсса по его $entityTypeId и $entityId
+    /**
+     * @param $entityId - ID элемента смарт-процесса
+     * @param $entityTypeId - ID смарт процесса
+     * @return void
+     */
     public static function getDataFieldsSmartById($entityId, $entityTypeId)
     {
         if(Bitrix\Main\Loader::includeModule('crm')) {
@@ -53,6 +64,13 @@ class ManagerSuppliers
     }
 
     //Добавляю в элемент смарт процесса товарные позиции
+    /**
+     * @param $entityTypeId - ID  смарт-процесса
+     * @param $elementId - ID элемента смарт-процесса
+     * @param $productRows - Массив товаров необходимых для добавления
+     * @param $smartTypeProductId - ID смарт-прцоесса для связи товарных позиций с элементом смарт-процесса
+     * @return void
+     */
     public static function addProductRowsToSmartProcess($entityTypeId, $elementId, $productRows, $smartTypeProductId = 'T40c') //'T40c' - Товарные позиции привязываются к заявке на закуп
     {
         // Добавляем новые товарные позиции
@@ -68,11 +86,11 @@ class ManagerSuppliers
 
             if (!$result->isSuccess()) {
                 $errors = $result->getErrorMessages();
-                echo "Ошибка при добавлении товарной позиции: " . implode(', ', $errors);
+                //echo "Ошибка при добавлении товарной позиции: " . implode(', ', $errors);
             }
         }
 
-        echo "Товарные позиции успешно добавлены к элементу с ID: " . $elementId;
+        //echo "Товарные позиции успешно добавлены к элементу с ID: " . $elementId;
     }
 
 

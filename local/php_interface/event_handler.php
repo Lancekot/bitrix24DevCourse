@@ -69,7 +69,6 @@ $eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', ['Otus\Use
 $eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', ['Otus\UserType\CUserTypeOnlineRecord', 'GetUserTypeDescription']);
 
 
-
 //Добавляю свой rest-метод, урок 28
 $eventManager->addEventHandlerCompatible('rest', 'OnRestServiceBuildDescription', ['Otus\Rest\Events', 'OnRestServiceBuildDescriptionHandler']);
 //$eventManager->addEventHandler('rest', 'OnRestServiceBuildDescription', ['Otus\Rest\Events', 'OnRestServiceBuildDescriptionHandler']);
@@ -88,10 +87,15 @@ $eventManager->addEventHandler("crm", "OnAfterCrmDealProductRowsSave", function(
 });
 
 
-//Отслеживаю созадние сделки, на наличие рабочих сделок по контакту
+//Отслеживаю созадние сделки, на наличие рабочих сделок по контакту и авто
 $eventManager->addEventHandler('crm', 'OnBeforeCrmDealAdd', ['OTUSPROJECT\Handlers\ManagerCrmEntyty', 'checkActiveDeal']);
-
 
 
 //Тип свойства для инфоблоков (Кнопка просмотр истории), для проекта
 $eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', ['OTUSPROJECT\UserType\CUserTypeButtonOrderHistory', 'GetUserTypeDescription']);
+
+
+
+//Событие на изменение остатков
+$eventManager->addEventHandler('catalog', '\Bitrix\Catalog\Product::onAfterUpdate', ['OTUSPROJECT\Handlers\ManagerRemainProducts', 'hendlerCheckRemainByCatalog']);
+//$eventManager->addEventHandlerCompatible('catalog', 'OnProductUpdate', ['OTUSPROJECT\Handlers\ManagerRemainProducts', 'checkRemainByCatalog']);
